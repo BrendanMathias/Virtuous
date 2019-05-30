@@ -1,0 +1,62 @@
+﻿@model Pages.Models.GiftAskModel
+@{
+    Layout = null;
+}
+<div class="row">
+    <div class="col-md-12 order-md-1">
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label for="GiftAskAmount">Gift Ask Amount</label>
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">$</span>
+                    </div>
+                    @Html.EditorFor(model => model.GiftAskAmount, new { htmlAttributes = new { @class = "form-control" } })
+                </div>
+            </div>
+        </div>
+        @if (Model.IsRecurring == true)
+        {
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <label for="RecurringStartDate">Recurring Gift Start Date</label>
+                    @Html.EditorFor(model => model.RecurringStartDate, new { htmlAttributes = new { @class = "form-control" } })
+                </div>
+                <div class="col-md-4 mb-5">
+                    <label for="Recurring">Gift Recurring Interval</label>
+                    <select class="form-control" id="recurringInterval">
+                        <option value="D">Daily</option>
+                        <option value="M">Monthly</option>
+                        <option value="Y">Yearly</option>
+                    </select>
+                </div>
+            </div>
+        }
+        <hr class="mb-4">
+        <button class="btn btn-primary btn-lg btn-block" id="confirmGift">Confirm Donation</button>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#confirmGift').click(function (e) {
+            e.preventDefault();
+
+            var giftAskAmount = $("#GiftAskAmount").val();
+            var recurringStartDate = $("#RecurringStartDate").val();
+            var recurringInterval = $("#recurringInterval").val();
+
+            console.log(giftAskAmount + ' ' + recurringStartDate + ' ' + recurringInterval);
+
+            $.ajax({
+                url: 'api/Donations/GiftConfirmation?giftAskAmount=' + giftAskAmount + '&giftRecurringStartDate=' + recurringStartDate + '&recurringInterval=' + recurringInterval,
+                type: 'POST',
+                datatype: 'JSON',
+            }).done(function (data) {
+
+            }).fail(function (data) {
+
+            });
+        });
+    });
+</script>
